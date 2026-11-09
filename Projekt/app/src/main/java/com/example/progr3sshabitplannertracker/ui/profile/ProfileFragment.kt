@@ -1,6 +1,8 @@
 package com.example.progr3sshabitplannertracker.ui.profile
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,7 @@ class ProfileFragment : Fragment() {
 
     private val getContentLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
+            Glide.with(this).load(uri).into(binding.ivProfile)
             viewModel.uploadProfileImage(uri, requireContext())
             Toast.makeText(requireContext(), "Uploading profile image...", Toast.LENGTH_SHORT).show()
         }
@@ -44,7 +47,16 @@ class ProfileFragment : Fragment() {
                 binding.tvUsername.text = profile.username ?: profile.email
                 binding.tvEmail.text = profile.email
 
-                if (!profile.profileImageUrl.isNullOrBlank()) {
+                // If base64 image data is returned by backend, decode and display it directly
+                if (!profile.profileImageBase64.isNullOrBlank()) {
+                    try {
+                        val decodedBytes = Base64.decode(profile.profileImageBase64, Base64.DEFAULT)
+                        val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                        if (bitmap != null) {
+                            binding.ivProfile.setImageBitmap(bitmap)
+                        }
+                    } catch (_: Exception) {}
+                } else if (!profile.profileImageUrl.isNullOrBlank()) {
                     val url = if (profile.profileImageUrl.startsWith("http")) {
                         profile.profileImageUrl
                     } else {

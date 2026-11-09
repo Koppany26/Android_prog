@@ -2,8 +2,9 @@ package com.example.progr3sshabitplannertracker.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val DarkForest = Color(0xFF0F2218)
-val ForestGreen = Color(0xFF1E3B2F)
-val SageGreen = Color(0xFF7F8C6A)
-val SandGold = Color(0xFFC8B48A)
-val CreamOffWhite = Color(0xFFF5F0E6)
+val MidnightBg = Color(0xFF1B262C)
+val SurfaceBlue = Color(0xFF22303C)
+val OceanBlue = Color(0xFF3282B8)
+val NavyHighlight = Color(0xFF0F4C75)
+val IceWhite = Color(0xFFF0F8FF)
+val LightIce = Color(0xFFBBE1FA)

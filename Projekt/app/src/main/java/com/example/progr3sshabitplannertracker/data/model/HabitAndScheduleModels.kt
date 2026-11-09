@@ -85,7 +85,9 @@ data class ProfileResponseDto(
     val email: String,
     val username: String? = null,
     val description: String? = null,
-    val profileImageUrl: String? = null
+    val profileImageUrl: String? = null,
+    @SerializedName("profileImageBase64")
+    val profileImageBase64: String? = null
 )
 
 data class UpdateProfileDto(

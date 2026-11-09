@@ -3,12 +3,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Progr3SS Earthy Forest Theme Palette -->
-    <color name="bg_main">#0F2218</color>
-    <color name="bg_surface">#1E3B2F</color>
-    <color name="primary_accent">#7F8C6A</color>
-    <color name="text_main">#F5F0E6</color>
-    <color name="text_secondary">#C8B48A</color>
-    <color name="input_border">#2E4D3E</color>
-    <color name="cyan_accent">#C8B48A</color>
+    <!-- Progr3SS Sophisticated Blue Theme Palette -->
+    <color name="bg_main">#1B262C</color>
+    <color name="bg_surface">#22303C</color>
+    <color name="primary_accent">#3282B8</color>
+    <color name="accent_highlight">#0F4C75</color>
+    <color name="text_main">#F0F8FF</color>
+    <color name="text_secondary">#BBE1FA</color>
+    <color name="input_border">#2E4857</color>
+    <color name="cyan_accent">#62B6CB</color>
 </resources>

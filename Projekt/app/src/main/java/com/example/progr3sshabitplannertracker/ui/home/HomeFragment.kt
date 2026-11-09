@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -83,18 +82,15 @@ class HomeFragment : Fragment() {
         val context = requireContext()
         val habitName = schedule.habit?.name ?: "Schedule Item"
 
-        val layout = LinearLayout(context).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(48, 24, 48, 24)
-        }
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_schedule, null)
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tvDialogTitle)
+        val spinnerStatus = dialogView.findViewById<Spinner>(R.id.spinnerStatus)
+        val etNotes = dialogView.findViewById<EditText>(R.id.etNotes)
+        val btnSave = dialogView.findViewById<View>(R.id.btnSave)
+        val btnDelete = dialogView.findViewById<View>(R.id.btnDelete)
 
-        val tvStatusLabel = TextView(context).apply {
-            text = "Status:"
-            textSize = 14f
-        }
-        layout.addView(tvStatusLabel)
+        tvTitle.text = "Edit: $habitName"
 
-        val spinnerStatus = Spinner(context)
         val statuses = listOf("Planned", "Completed", "Skipped")
         val spinnerAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, statuses)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -102,42 +98,45 @@ class HomeFragment : Fragment() {
         
         val currentStatusPos = statuses.indexOf(schedule.status).takeIf { it >= 0 } ?: 0
         spinnerStatus.setSelection(currentStatusPos)
-        layout.addView(spinnerStatus)
 
-        val tvNotesLabel = TextView(context).apply {
-            text = "\nNotes:"
-            textSize = 14f
+        etNotes.setText(schedule.notes ?: "")
+
+        val dialog = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .create()
+
+        btnSave.setOnClickListener {
+            val selectedStatus = spinnerStatus.selectedItem.toString()
+            val newNotes = etNotes.text.toString().trim()
+            viewModel.updateSchedule(schedule.id, selectedStatus, newNotes)
+            Toast.makeText(context, "Schedule updated!", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
         }
-        layout.addView(tvNotesLabel)
 
-        val etNotes = EditText(context).apply {
-            hint = "Add notes..."
-            setText(schedule.notes ?: "")
+        btnDelete.setOnClickListener {
+            val confirmView = LayoutInflater.from(context).inflate(R.layout.dialog_delete_confirm, null)
+            val btnConfirm = confirmView.findViewById<View>(R.id.btnConfirmDelete)
+            val btnCancel = confirmView.findViewById<View>(R.id.btnCancelDelete)
+
+            val confirmDialog = AlertDialog.Builder(context)
+                .setView(confirmView)
+                .create()
+
+            btnConfirm.setOnClickListener {
+                viewModel.deleteSchedule(schedule.id)
+                Toast.makeText(context, "Schedule deleted!", Toast.LENGTH_SHORT).show()
+                confirmDialog.dismiss()
+                dialog.dismiss()
+            }
+
+            btnCancel.setOnClickListener {
+                confirmDialog.dismiss()
+            }
+
+            confirmDialog.show()
         }
-        layout.addView(etNotes)
 
-        AlertDialog.Builder(context)
-            .setTitle("Edit Schedule: $habitName")
-            .setView(layout)
-            .setPositiveButton("Save") { _, _ ->
-                val selectedStatus = spinnerStatus.selectedItem.toString()
-                val newNotes = etNotes.text.toString().trim()
-                viewModel.updateSchedule(schedule.id, selectedStatus, newNotes)
-                Toast.makeText(context, "Schedule updated!", Toast.LENGTH_SHORT).show()
-            }
-            .setNeutralButton("Delete") { _, _ ->
-                AlertDialog.Builder(context)
-                    .setTitle("Delete Schedule")
-                    .setMessage("Are you sure you want to delete this schedule?")
-                    .setPositiveButton("Delete") { _, _ ->
-                        viewModel.deleteSchedule(schedule.id)
-                        Toast.makeText(context, "Schedule deleted!", Toast.LENGTH_SHORT).show()
-                    }
-                    .setNegativeButton("Cancel", null)
-                    .show()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
+        dialog.show()
     }
 
     private fun setupObservers() {
