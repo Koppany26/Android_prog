@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Progr3SS Earthy Forest Theme Palette -->
+    <color name="bg_main">#0F2218</color>
+    <color name="bg_surface">#1E3B2F</color>
+    <color name="primary_accent">#7F8C6A</color>
+    <color name="text_main">#F5F0E6</color>
+    <color name="text_secondary">#C8B48A</color>
+    <color name="input_border">#2E4D3E</color>
+    <color name="cyan_accent">#C8B48A</color>
+</resources>
